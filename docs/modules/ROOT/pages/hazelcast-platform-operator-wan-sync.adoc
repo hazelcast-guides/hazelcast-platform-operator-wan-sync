@@ -12,28 +12,27 @@
 In this tutorial, you'll do the following:
 
 - Deploy two Hazelcast clusters.
-- Create Hazelcast map configuration on one of the clusters.
+- Create a Hazelcast map configuration on one of the clusters.
 - Synchronize map data between the two Hazelcast clusters using Full and Delta WAN Sync.
 
 == Before you Begin
 
-Before starting this tutorial, make sure that you have the following:
+Before starting this tutorial, make sure you have the following:
 
 * A running https://kubernetes.io/[Kubernetes] cluster
 * The Kubernetes command-line tool, https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl]
 * A deployed xref:operator:ROOT:get-started.adoc[Hazelcast Platform Operator]
 
-== Step 1. Start first Hazelcast Clusters
+== Step 1. Start the First Hazelcast Cluster
 
-. Create a secret with your link:http://trialrequest.hazelcast.com/[Hazelcast Enterprise License].
+1. Create a secret with your link:http://trialrequest.hazelcast.com/[Hazelcast Enterprise License].
 +
 [source, shell]
 ----
 kubectl create secret generic hazelcast-license-key --from-literal=license-key=<hz-license-key>
 ----
 
-. Create the first Hazelcast cluster.
-
+2. Create the first Hazelcast cluster.
 +
 [source, shell]
 ----
@@ -42,42 +41,49 @@ include::ROOT:example$/operator-wan-sync/hazelcast-first.yaml[]
 EOF
 ----
 
-+
-. Check the status of the cluster to make sure that cluster is running.
+3. Check the status of the cluster to ensure it is running.
 +
 [source, shell]
 ----
 kubectl get hazelcast
 ----
 +
-[source,shell]
+[source, shell]
 ----
 NAME               STATUS    MEMBERS
 hazelcast-first    Running   3/3
 ----
 
-== Step 2. Create a map for WAN Replication
+== Step 2. Create a Map for WAN Replication
 
-Create map on the first cluster.
+If you need a *Full WAN Sync*, create the following map configuration.
 [source, shell]
 ----
 kubectl apply -f - <<EOF
-include::ROOT:example$/operator-wan-sync/map.yaml[]
+include::ROOT:example$/operator-wan-sync/full-sync-map.yaml[]
 EOF
 ----
 
-== Step 3. Put Entries to the Map on the First Cluster [[put-entries]]
+If you need a *Delta WAN Sync*, create the following map configuration.
+----
+kubectl apply -f - <<EOF
+include::ROOT:example$/operator-wan-sync/full-sync-map.yaml[]
+EOF
+----
+
+
+== Step 3. Put Entries into the Map on the First Cluster [[put-entries]]
 
 In this step, you'll fill the map on the first, source cluster.
 
-. Find the address of the first cluster.
+1. Find the address of the first cluster.
 +
 [source, shell]
 ----
 kubectl get hazelcastendpoint --selector="app.kubernetes.io/instance in (hazelcast-first)"
 ----
 +
-[source,shell]
+[source, shell]
 ----
 NAME                   TYPE        ADDRESS
 hazelcast-first        Discovery   34.123.9.149:5701
@@ -86,7 +92,7 @@ hazelcast-first-wan    WAN         34.123.9.149:5710
 +
 The `ADDRESS` column displays the external address of the first Hazelcast cluster.
 
-. Configure the Hazelcast client to connect to the first cluster, using its address. [[configure-client]]
+2. Configure the Hazelcast client to connect to the first cluster using its address. [[configure-client]]
 +
 To access all sample clients, clone the following repository:
 +
@@ -96,8 +102,7 @@ git clone https://github.com/hazelcast-guides/hazelcast-platform-operator-wan-sy
 cd hazelcast-platform-operator-wan-sync
 ----
 +
-The sample code(excluding CLC) for this tutorial is in the link:https://github.com/hazelcast-guides/hazelcast-platform-operator-wan-sync/tree/master/docs/modules/ROOT/examples/operator-wan-sync[`docs/modules/ROOT/examples/operator-wan-sync`] directory.
-
+The sample code (excluding CLC) for this tutorial is in the link:https://github.com/hazelcast-guides/hazelcast-platform-operator-wan-sync/tree/master/docs/modules/ROOT/examples/operator-wan-sync[`docs/modules/ROOT/examples/operator-wan-sync`] directory.
 +
 [tabs]
 ====
@@ -105,10 +110,9 @@ The sample code(excluding CLC) for this tutorial is in the link:https://github.c
 CLC::
 +
 --
-NOTE: Before using CLC, it should be installed in your system. Check the installation instructions for CLC: xref:clc:ROOT:install-clc.adoc[].
+NOTE: Before using CLC, it should be installed on your system. Check the installation instructions for CLC: xref:clc:ROOT:install-clc.adoc[].
 
-Run the following command for adding the first cluster config to the CLC.
-
+Run the following command to add the first cluster config to the CLC.
 [source, bash]
 ----
 clc config add hz-1 cluster.name=dev cluster.address=<FIRST-CLUSTER-EXTERNAL-IP>
@@ -160,8 +164,8 @@ include::ROOT:example$/operator-wan-sync/dotnet/Program.cs[]
 --
 
 ====
-+
-. Start to fill the map.
+
+3. Start to fill the map.
 +
 [tabs]
 ====
@@ -322,9 +326,9 @@ Current map size: 4
 
 In this step, you'll check the sizes of the maps on the second, target cluster to make sure that data are *not* replicated between clusters.
 
-. Configure the Hazelcast client to connect to the second cluster, as you did in <<configure-client, Configure the Hazelcast Client>>.
+1. Configure the Hazelcast client to connect to the second cluster, as you did in <<configure-client, Configure the Hazelcast Client>>.
 
-. Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, such as `map`.
+2. Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, such as `map`.
 
 +
 [tabs]
@@ -434,9 +438,10 @@ Current map (<MAP-NAME>) size: 0
 
 ====
 
-== Step 5. Start second Hazelcast Clusters
+== Step 5. Start the Second Hazelcast Cluster
 
-. Run the following command to create the second cluster.
+1. Run the following command to create the second cluster
+
 +
 [source, shell]
 ----
@@ -445,14 +450,14 @@ include::ROOT:example$/operator-wan-sync/hazelcast-second.yaml[]
 EOF
 ----
 
-. Check the status of the cluster to make sure that clusters are running.
+2. Check the status of the cluster to ensure that the clusters are running.
 +
 [source, shell]
 ----
 kubectl get hazelcast
 ----
 +
-[source,shell]
+[source, shell]
 ----
 NAME               STATUS    MEMBERS
 hazelcast-first     Running   3/3
@@ -462,14 +467,14 @@ hazelcast-second    Running   3/3
 == Step 6. Create a WAN Replication Configuration
 
 - Use the first cluster as the source cluster by adding its name as a resource in the WAN Replication configuration.
-. First, find the address of the second cluster.
+1. First, find the address of the second cluster.
 +
 [source, shell]
 ----
 kubectl get hazelcastendpoint --selector="app.kubernetes.io/instance in (hazelcast-second)"
 ----
 +
-[source,shell]
+[source, shell]
 ----
 NAME                   TYPE        ADDRESS
 hazelcast-second       Discovery   34.16.0.16:5701
@@ -479,21 +484,28 @@ hazelcast-second-wan   WAN         34.16.0.16:5710
 The `ADDRESS` column displays the external address of the second Hazelcast cluster.
 
 +
-. Add the second cluster as the target cluster to receive the WAN Replication events.
+2. Add the second cluster as the target cluster to receive the WAN Replication events.
 +
-Run the following command to apply the configuration.
+If you need a *Full WAN Sync*, run the following command to apply the configuration.
 +
 [source, shell]
 ----
 kubectl apply -f - <<EOF
-include::ROOT:example$/operator-wan-sync/wanreplication.yaml[]
+include::ROOT:example$/operator-wan-sync/full-sync-wanreplication.yaml[]
 EOF
-
+----
+If you need a *Delta WAN Sync*, run the following command to apply the configuration.
++
+[source, shell]
+----
+kubectl apply -f - <<EOF
+include::ROOT:example$/operator-wan-sync/delta-sync-wanreplication.yaml[]
+EOF
 ----
 
-== Step 7. Create and Configure the Full WAN Sync
+== Step 7. Create and Configure the WAN Sync
 
-In this step, you'll set up Full WAN Sync to ensure data consistency between the two Hazelcast clusters. Full WAN Sync transmits all data from the source cluster to the target cluster, aligning the state of the target `IMap` with the source `IMap`. This method is particularly beneficial when the synchronization between two remote clusters is lost due to WAN queue overflows or cluster restarts.
+In this step, you'll set up WAN Sync to ensure data consistency between the two Hazelcast clusters. Full WAN Sync transmits all data from the source cluster to the target cluster, aligning the state of the target `IMap` with the source `IMap`. This method is particularly beneficial when the synchronization between two remote clusters is lost due to WAN queue overflows or cluster restarts.
 
 Create the WAN Sync resource using the existing `WanReplication` CR.
 
@@ -539,3 +551,4 @@ kubectl delete $(kubectl get wansync,wanreplications,map,hazelcast -o name)
 
 - xref:operator:ROOT:wan-replication.adoc[]
 - xref:hazelcast-platform-operator-expose-externally.adoc[]
+-----
