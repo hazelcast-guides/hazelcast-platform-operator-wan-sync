@@ -67,7 +67,7 @@ EOF
 If you need a *Delta WAN Sync*, create the following map configuration.
 ----
 kubectl apply -f - <<EOF
-include::ROOT:example$/operator-wan-sync/full-sync-map.yaml[]
+include::ROOT:example$/operator-wan-sync/delta-sync-map.yaml[]
 EOF
 ----
 
