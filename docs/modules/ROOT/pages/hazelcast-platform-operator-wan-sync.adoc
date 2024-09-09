@@ -553,4 +553,3 @@ kubectl delete $(kubectl get wansync,wanreplications,map,hazelcast -o name)
 
 - xref:operator:ROOT:wan-replication.adoc[]
 - xref:hazelcast-platform-operator-expose-externally.adoc[]
------
