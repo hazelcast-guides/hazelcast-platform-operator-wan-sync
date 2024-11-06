@@ -377,7 +377,7 @@ hazelcast-second-wan   WAN         34.16.0.16:5710
 +
 The `ADDRESS` column displays the external address of the second Hazelcast cluster.
 
-. Repeat 2.3, using the address of the second cluster, to enable the client to connect to 
+. Repeat steps 2.3 to 2.4, using the address of the second cluster to enable the client to connect. 
 
 . Connect to the second cluster and verify that the map named `map-sync` contains no data.
 
