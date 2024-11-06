@@ -85,7 +85,7 @@ hazelcast-second    Running   3/3
 
 In this step, you will create and populate a map on the `hazelcast-first` cluster. This map will be the source for WAN Replication.
 
-. Create the configuration for a map called `map4Sync` on the `hazelcast-first` cluster.
+. Create the configuration for a map called `map-sync` on the `hazelcast-first` cluster.
 +
 If you need *Full WAN Synchronization*, use the following command.
 +
@@ -208,7 +208,7 @@ include::ROOT:example$/operator-wan-sync/dotnet/Program.cs[]
 CLC::
 +
 --
-Execute the following command to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Execute the following command to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -229,7 +229,7 @@ clc -c hz-1 map size --name <MAP-NAME>
 Java::
 +
 --
-Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -255,7 +255,7 @@ Current map size: 4
 NodeJS::
 +
 --
-Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -281,7 +281,7 @@ Current map size: 4
 Go::
 +
 --
-Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -306,7 +306,7 @@ Current map size: 4
 Python::
 +
 --
-Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -332,7 +332,7 @@ Current map size: 4
 .NET::
 +
 --
-Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map4Sync`.
+Start the application to populate the map with entries, replacing `<MAP-NAME>` with the actual map name, `map-sync`.
 
 [source, bash]
 ----
@@ -359,7 +359,7 @@ Current map size: 4
 
 == Step 3. Enable WAN Replication and Replicate Entries
 
-In this step, you'll first verify that the second cluster does not contain a `map4Sync` structure. You'll then enable WAN Replication and verify that the map and all entries have been copied to the second cluster. 
+In this step, you'll first verify that the second cluster does not contain a `map-sync` structure. You'll then enable WAN Replication and verify that the map and all entries have been copied to the second cluster. 
 
 . Find the address of the second cluster.
 +
@@ -379,7 +379,7 @@ The `ADDRESS` column displays the external address of the second Hazelcast clust
 
 . Repeat 2.3, using the address of the second cluster, to enable the client to connect to 
 
-. Connect to the second cluster and verify that the map named `map4Sync` contains no data.
+. Connect to the second cluster and verify that the map named `map-sync` contains no data.
 
 +
 [tabs]
@@ -537,7 +537,7 @@ NAME       STATUS
 wan-sync   Completed
 ----
 
-. Repeat step 3.3 to verify that the `map4Sync` structure on the `hazelcast-second` cluster now contains data. 
+. Repeat step 3.3 to verify that the `map-sync` structure on the `hazelcast-second` cluster now contains data. 
 
 == Clean Up
 
