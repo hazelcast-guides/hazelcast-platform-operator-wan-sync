@@ -7,5 +7,5 @@ spec:
     - name: hazelcast-first
       kind: Hazelcast
   targetClusterName: dev
-  synConsistencyCheckStrategy: "MERKLE_TREES"
+  syncConsistencyCheckStrategy: "MERKLE_TREES"
   endpoints: "<SECOND-CLUSTER-EXTERNAL-IP>"
